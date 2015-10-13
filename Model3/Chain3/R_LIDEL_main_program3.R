@@ -55,7 +55,7 @@ setwd("C:/LIDEL/Model3/Chain3")
                  data_y=all_data, data_MCMC=data_MCMC, n.iter=n.iter, params=params,  
                  param_names=param_names, Init_Cs=Init_Cs, burnin=burnin, chain=1)
 
-save.image(file="trialrun_workspace3.RData")
+save.image(file="./results/trialrun_workspace3.RData")
 
 #post-processing code to output results
 	source("LIDEL_post_processing3.R")

@@ -159,7 +159,7 @@ choose=function(x, z, Like_z, Like_x, param, tune, support){
 	  
 		if(e_num_dom_L==0 & q.ratio==Inf){
 			b= paste(param, "curr:", x, "new:", z, "like param x", Like_x, "like param z", Like_z, "q", q.ratio, "exp", e_num_dom_L)
-			write(b, "R_L_Inf_fail.txt")
+			write(b, "./results/R_L_Inf_fail.txt")
 			R=0
 		  } else {
 			R = e_num_dom_L  * q.ratio 
@@ -167,7 +167,7 @@ choose=function(x, z, Like_z, Like_x, param, tune, support){
     
 	if(R=="NaN"){
 			a= paste(param, "curr:", x, "new:", z, "like param x", Like_x, "like param z", Like_z, "q", q.ratio, "exp", e_num_dom_L)
-			write(a, "R_L_NAN_fail.txt")
+			write(a, "./results/R_L_NAN_fail.txt")
 			R=0
 	}
 	
@@ -189,7 +189,7 @@ choose=function(x, z, Like_z, Like_x, param, tune, support){
   e_num_dom = exp(numerator - denominator)
   if(e_num_dom==0 & q.ratio==Inf){
     a= paste(param, "curr:", x, "new:", z, "like param x", Like_x, "like param z", Like_z, "q", q.ratio, "exp", e_num_dom)
-    write(a, "R_proc_fail.txt")
+    write(a, "./results/R_proc_fail.txt")
     R_proc=0
   } else {
     R_proc = e_num_dom  * q.ratio 
@@ -197,7 +197,7 @@ choose=function(x, z, Like_z, Like_x, param, tune, support){
   
   	if(R_proc=="NaN"){
 			a= paste(param, "curr:", x, "new:", z, "like param x", Like_x, "like param z", Like_z, "q", q.ratio, "exp", e_num_dom)
-			write(a, "R_proc_NAN_fail.txt")
+			write(a, "./results/R_proc_NAN_fail.txt")
 			R_proc=0
 	}
   
@@ -337,7 +337,7 @@ Run_MCMC = function(set, d_l_list, data_y, data_MCMC, n.iter, params, param_name
 #         #ALTERNATE-RUBEL write 1000 iteration counter to text document
              if(s%%100==0){
 				prog=paste("chain", chain,s, sep=" ")
-				write(prog,"progress2.txt")
+				write(prog,"./results/progress2.txt")
 		}
       
       #print acceptance up to end of burnin
@@ -770,14 +770,14 @@ proc_curr_apply=mapply(Parameter_new_mod,
 		  pine_accept=c("pine", a_latent2[[5]][[1]], a_latent2[[5]][[2]], a_latent2[[5]][[3]])
 		 
 		  
-			write(alfalfa_accept,"Latent_alf_acceptance.txt")
-			write(ash_accept,"Latent_ash_acceptance.txt")
-			write(bluestem_accept,"Latent_blue_acceptance.txt")
-			write(oak_accept,"Latent_oak_acceptance.txt")
-			write(pine_accept,"Latent_pine_acceptance.txt")
+			write(alfalfa_accept,"./results/Latent_alf_acceptance.txt")
+			write(ash_accept,"./results/Latent_ash_acceptance.txt")
+			write(bluestem_accept,"./results/Latent_blue_acceptance.txt")
+			write(oak_accept,"./results/Latent_oak_acceptance.txt")
+			write(pine_accept,"./results/Latent_pine_acceptance.txt")
 		  
 #        #ALTERNATE: RUBEL print to txt file
-          accept_nam=paste("acceptance", chain, ".txt", sep="")
+          accept_nam=paste("./results/acceptance", chain, ".txt", sep="")
           write(a1, accept_nam)
 		  
 
