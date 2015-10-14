@@ -1,23 +1,25 @@
+#############Saved Workspace########################
 #code to run post-processing independently, loading saved workspace
-		# setwd("C:/LIDEL/Model3/Chain3")
-		# library(deSolve, lib.loc="/data/rubelscratch/eecampbe/packages")
-		# library(compiler)
-		# library(lattice)
-		# library(coda)
-		# library(MASS)
-		# library(gam, lib.loc="/data/rubelscratch/eecampbe/packages")
-		# library(grid)
-		# library(vcd, lib.loc="/data/rubelscratch/eecampbe/packages")
-		# library(pscl, lib.loc="/data/rubelscratch/eecampbe/packages")
-		# library(gplots, lib.loc="/data/rubelscratch/eecampbe/packages")
+    setwd("C:/LIDEL/Model3/Chain3")
+    library(deSolve)
+    library(gplots)
+    library(pscl)
+    library(rootSolve)
+    library(coda)
+    library(compiler)
+    
+  #load saved workspace from storage location
+		load("C:/LIDEL_rubel/Model3/Chain3/results/trialrun_workspace3.RData")
+		
+##################Data Organization################  
+  #results are organized in x_Cinit in a list, where:
+  # [[1]]=parameters
+  # [[2]]=all variance
+  # [[3]]-[[7]]=latent for all litter & time
+  # [[8]]=list of all process results from burnin:n.iter,
+	#       litter types listed from [[1]]-[[5]]
 
-		# load("trialrun_workspace.RData")
-
-#results are organized in x_Cinit in a list as follows:
-# [[1]]=parameters
-# [[2]]=all variance
-# [[3]]-[[7]]=latent for all litter & time
-# [[8]]=list of all process results from burnin:n.iter [[1]]-[[5]]
+		
 ##################Parameter results###############
 #create mcmc objects
 #parameter results
@@ -111,68 +113,86 @@ dev.off()
 
 
 ####################RMSE################################
+#vector to store RMSE value for each iteration after burnin discarded
 all_rmse=vector("numeric", length=(length(burnin:n.iter)-1))
 
+#RMSE function
 rmse<-function(error){
   sqrt(mean(error^2))
 }
 
+#matrices to store latent state estimates of DOC
 est_fin_alf_DOC=matrix(0, nrow=length(d_l_list[[1]][[2]][,1]), ncol=length(burnin:n.iter))
 est_fin_ash_DOC=matrix(0, nrow=length(d_l_list[[2]][[2]][,1]), ncol=length(burnin:n.iter))
 est_fin_blu_DOC=matrix(0, nrow=length(d_l_list[[3]][[2]][,1]), ncol=length(burnin:n.iter))
 est_fin_oak_DOC=matrix(0, nrow=length(d_l_list[[4]][[2]][,1]), ncol=length(burnin:n.iter))
 est_fin_pin_DOC=matrix(0, nrow=length(d_l_list[[5]][[2]][,1]), ncol=length(burnin:n.iter))
 
+#matrices to store latent state estimates of CO2
 est_fin_alf_CO2=matrix(0, nrow=length(d_l_list[[1]][[3]][,1]), ncol=length(burnin:n.iter))
 est_fin_ash_CO2=matrix(0, nrow=length(d_l_list[[2]][[3]][,1]), ncol=length(burnin:n.iter))
 est_fin_blu_CO2=matrix(0, nrow=length(d_l_list[[3]][[3]][,1]), ncol=length(burnin:n.iter))
 est_fin_oak_CO2=matrix(0, nrow=length(d_l_list[[4]][[3]][,1]), ncol=length(burnin:n.iter))
 est_fin_pin_CO2=matrix(0, nrow=length(d_l_list[[5]][[3]][,1]), ncol=length(burnin:n.iter))
 
+#matrices to store out-of-sample estimates of DOC
+final_alfalfa_DOC = matrix(0, nrow=length(non_d_l_list[[1]][[1]][,1]), ncol=length(burnin:n.iter))
+final_ash_DOC     = matrix(0, nrow=length(non_d_l_list[[2]][[1]][,1]), ncol=length(burnin:n.iter))
+final_bluestem_DOC= matrix(0, nrow=length(non_d_l_list[[3]][[1]][,1]), ncol=length(burnin:n.iter))
+final_oak_DOC     = matrix(0, nrow=length(non_d_l_list[[4]][[1]][,1]), ncol=length(burnin:n.iter))
+final_pine_DOC    = matrix(0, nrow=length(non_d_l_list[[5]][[1]][,1]), ncol=length(burnin:n.iter))
+
+#matrices to store out-of-sample estimates of CO2
+final_alfalfa_CO2 = matrix(0, nrow=length(non_d_l_list[[1]][[2]][,1]), ncol=length(burnin:n.iter))
+final_ash_CO2     = matrix(0, nrow=length(non_d_l_list[[2]][[2]][,1]), ncol=length(burnin:n.iter))
+final_bluestem_CO2= matrix(0, nrow=length(non_d_l_list[[3]][[2]][,1]), ncol=length(burnin:n.iter))
+final_oak_CO2     = matrix(0, nrow=length(non_d_l_list[[4]][[2]][,1]), ncol=length(burnin:n.iter))
+final_pine_CO2    = matrix(0, nrow=length(non_d_l_list[[5]][[2]][,1]), ncol=length(burnin:n.iter))
+
 
 for(i in 1:length(all_rmse)){
 #C6, DOC (calculate difference between measurement timepoints)
   #alfalfa non-estimated time points
-    final_alfalfa_DOC=subset(x_Cinit[[8]][[1]][,7,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(non_d_l_list[[1]][[1]][,2]))-
+    final_alfalfa_DOC[,i]=subset(x_Cinit[[8]][[1]][,7,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(non_d_l_list[[1]][[1]][,2]))-
       subset(x_Cinit[[8]][[1]][,7,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(non_d_l_list[[1]][[1]][,1]))
   #alfalfa error DOC
-    error_alfalfa_DOC=data_nonMCMC[[1]][[1]][,3:5]-final_alfalfa_DOC[[1]]
+    error_alfalfa_DOC=data_nonMCMC[[1]][[1]][,3:5]-final_alfalfa_DOC[,i]
   #alfalfa, estimated time points
     est_fin_alf_DOC[,i]=subset(x_Cinit[[8]][[1]][,7,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(d_l_list[[1]][[2]][,2]))-
       subset(x_Cinit[[8]][[1]][,7,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(d_l_list[[1]][[2]][,1]))
 
   #ash non-estimated time points
-    final_ash_DOC=subset(x_Cinit[[8]][[2]][,7,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(non_d_l_list[[2]][[1]][,2]))-
+    final_ash_DOC[,i]=subset(x_Cinit[[8]][[2]][,7,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(non_d_l_list[[2]][[1]][,2]))-
       subset(x_Cinit[[8]][[2]][,7,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(non_d_l_list[[2]][[1]][,1]))
   #ash error DOC
-    error_ash_DOC=data_nonMCMC[[2]][[1]][,3:5]-final_ash_DOC[[1]]
+    error_ash_DOC=data_nonMCMC[[2]][[1]][,3:5]-final_ash_DOC[,i]
   #ash, estimated time points
     est_fin_ash_DOC[,i]=subset(x_Cinit[[8]][[2]][,7,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(d_l_list[[2]][[2]][,2]))-
       subset(x_Cinit[[8]][[2]][,7,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(d_l_list[[2]][[2]][,1]))
   
   #bluestem non-estimated time points
-    final_bluestem_DOC=subset(x_Cinit[[8]][[3]][,7,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(non_d_l_list[[3]][[1]][,2]))-
+    final_bluestem_DOC[,i]=subset(x_Cinit[[8]][[3]][,7,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(non_d_l_list[[3]][[1]][,2]))-
       subset(x_Cinit[[8]][[3]][,7,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(non_d_l_list[[3]][[1]][,1]))
   #bluestem error DOC
-    error_bluestem_DOC=data_nonMCMC[[3]][[1]][,3:5]-final_bluestem_DOC[[1]]
+    error_bluestem_DOC=data_nonMCMC[[3]][[1]][,3:5]-final_bluestem_DOC[,i]
   #bluestem, estimated time points
     est_fin_blu_DOC[,i]=subset(x_Cinit[[8]][[3]][,7,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(d_l_list[[3]][[2]][,2]))-
       subset(x_Cinit[[8]][[3]][,7,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(d_l_list[[3]][[2]][,1]))
   
   #oak non-estimated time points
-    final_oak_DOC=subset(x_Cinit[[8]][[4]][,7,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(non_d_l_list[[4]][[1]][,2]))-
+    final_oak_DOC[,i]=subset(x_Cinit[[8]][[4]][,7,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(non_d_l_list[[4]][[1]][,2]))-
       subset(x_Cinit[[8]][[4]][,7,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(non_d_l_list[[4]][[1]][,1]))
   #oak error DOC
-    error_oak_DOC=data_nonMCMC[[4]][[1]][,3:5]-final_oak_DOC[[1]]
+    error_oak_DOC=data_nonMCMC[[4]][[1]][,3:5]-final_oak_DOC[,i]
   #oak, estimated time points
     est_fin_oak_DOC[,i]=subset(x_Cinit[[8]][[4]][,7,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(d_l_list[[4]][[2]][,2]))-
       subset(x_Cinit[[8]][[4]][,7,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(d_l_list[[4]][[2]][,1]))
   
   #pine non-estimated time points  
-    final_pine_DOC=subset(x_Cinit[[8]][[5]][,7,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(non_d_l_list[[5]][[1]][,2]))-
+    final_pine_DOC[,i]=subset(x_Cinit[[8]][[5]][,7,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(non_d_l_list[[5]][[1]][,2]))-
       subset(x_Cinit[[8]][[5]][,7,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(non_d_l_list[[5]][[1]][,1]))
   #pine error DOC
-    error_pine_DOC=data_nonMCMC[[5]][[1]][,3:5]-final_pine_DOC[[1]]
+    error_pine_DOC=data_nonMCMC[[5]][[1]][,3:5]-final_pine_DOC[,i]
   #pine, estimated time points
     est_fin_pin_DOC[,i]=subset(x_Cinit[[8]][[5]][,7,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(d_l_list[[5]][[2]][,2]))-
       subset(x_Cinit[[8]][[5]][,7,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(d_l_list[[5]][[2]][,1]))
@@ -183,46 +203,46 @@ for(i in 1:length(all_rmse)){
   #
   #
   #alfalfa non-estimated time points 
-    final_alfalfa_CO2=subset(x_Cinit[[8]][[1]][,8,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(non_d_l_list[[1]][[2]][,2]))-
+    final_alfalfa_CO2[,i]=subset(x_Cinit[[8]][[1]][,8,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(non_d_l_list[[1]][[2]][,2]))-
       subset(x_Cinit[[8]][[1]][,8,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(non_d_l_list[[1]][[2]][,1]))
   #alfalfa error CO2
-    error_alfalfa_CO2=data_nonMCMC[[1]][[2]][,3:5]-final_alfalfa_CO2[[1]]
+    error_alfalfa_CO2=data_nonMCMC[[1]][[2]][,3:5]-final_alfalfa_CO2[,i]
   #alfalfa, estimated time points
     est_fin_alf_CO2[,i]=subset(x_Cinit[[8]][[1]][,8,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(d_l_list[[1]][[3]][,2]))-
       subset(x_Cinit[[8]][[1]][,8,i], x_Cinit[[8]][[1]][,1,i] %in% as.numeric(d_l_list[[1]][[3]][,1]))
     
   #ash non-estimated time points 
-    final_ash_CO2=subset(x_Cinit[[8]][[2]][,8,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(non_d_l_list[[2]][[2]][,2]))-
+    final_ash_CO2[,i]=subset(x_Cinit[[8]][[2]][,8,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(non_d_l_list[[2]][[2]][,2]))-
       subset(x_Cinit[[8]][[2]][,8,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(non_d_l_list[[2]][[2]][,1]))
   #ash error CO2
-    error_ash_CO2=data_nonMCMC[[2]][[2]][,3:5]-final_ash_CO2[[1]]
+    error_ash_CO2=data_nonMCMC[[2]][[2]][,3:5]-final_ash_CO2[,i]
   #ash, estimated time points
     est_fin_ash_CO2[,i]=subset(x_Cinit[[8]][[2]][,8,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(d_l_list[[2]][[3]][,2]))-
       subset(x_Cinit[[8]][[2]][,8,i], x_Cinit[[8]][[2]][,1,i] %in% as.numeric(d_l_list[[2]][[3]][,1]))
     
   #bluestem non-estimated time points 
-    final_bluestem_CO2=subset(x_Cinit[[8]][[3]][,8,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(non_d_l_list[[3]][[2]][,2]))-
+    final_bluestem_CO2[,i]=subset(x_Cinit[[8]][[3]][,8,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(non_d_l_list[[3]][[2]][,2]))-
       subset(x_Cinit[[8]][[3]][,8,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(non_d_l_list[[3]][[2]][,1]))
   #bluestem error CO2 
-    error_bluestem_CO2=data_nonMCMC[[3]][[2]][,3:5]-final_bluestem_CO2[[1]]
+    error_bluestem_CO2=data_nonMCMC[[3]][[2]][,3:5]-final_bluestem_CO2[,i]
   #bluestem, estimated time points
     est_fin_blu_CO2[,i]=subset(x_Cinit[[8]][[3]][,8,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(d_l_list[[3]][[3]][,2]))-
       subset(x_Cinit[[8]][[3]][,8,i], x_Cinit[[8]][[3]][,1,i] %in% as.numeric(d_l_list[[3]][[3]][,1]))
     
   #oak non-estimated time points 
-    final_oak_CO2=subset(x_Cinit[[8]][[4]][,8,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(non_d_l_list[[4]][[2]][,2]))-
+    final_oak_CO2[,i]=subset(x_Cinit[[8]][[4]][,8,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(non_d_l_list[[4]][[2]][,2]))-
       subset(x_Cinit[[8]][[4]][,8,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(non_d_l_list[[4]][[2]][,1]))
   #oak error CO2
-    error_oak_CO2=data_nonMCMC[[4]][[2]][,3:5]-final_oak_CO2[[1]]
+    error_oak_CO2=data_nonMCMC[[4]][[2]][,3:5]-final_oak_CO2[,i]
   #oak, estimated time points
     est_fin_oak_CO2[,i]=subset(x_Cinit[[8]][[4]][,8,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(d_l_list[[4]][[3]][,2]))-
       subset(x_Cinit[[8]][[4]][,8,i], x_Cinit[[8]][[4]][,1,i] %in% as.numeric(d_l_list[[4]][[3]][,1]))
     
   #pine non-estimated time points 
-    final_pine_CO2=subset(x_Cinit[[8]][[5]][,8,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(non_d_l_list[[5]][[2]][,2]))-
+    final_pine_CO2[,i]=subset(x_Cinit[[8]][[5]][,8,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(non_d_l_list[[5]][[2]][,2]))-
       subset(x_Cinit[[8]][[5]][,8,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(non_d_l_list[[5]][[2]][,1]))
   #pine error CO2
-    error_pine_CO2=data_nonMCMC[[5]][[2]][,3:5]-final_pine_CO2[[1]]
+    error_pine_CO2=data_nonMCMC[[5]][[2]][,3:5]-final_pine_CO2[,i]
   #alfalfa, estimated time points
     est_fin_pin_CO2[,i]=subset(x_Cinit[[8]][[5]][,8,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(d_l_list[[5]][[3]][,2]))-
       subset(x_Cinit[[8]][[5]][,8,i], x_Cinit[[8]][[5]][,1,i] %in% as.numeric(d_l_list[[5]][[3]][,1]))
@@ -285,20 +305,35 @@ all_rmse[i]=rmse(all_error)
 		write.csv(CVmod_mass_oak3, file="C:/LIDEL/Model3/Chain3/results/CVmod_mass_oak3.csv")
 		write.csv(CVmod_mass_pin3, file="C:/LIDEL/Model3/Chain3/results/CVmod_mass_pin3.csv")
 		
-		#write output for modeled DOC measurements
+		#write output for latent state modeled DOC measurements
 		write.csv(t(est_fin_alf_DOC), file="C:/LIDEL/Model3/Chain3/results/CVmod_DOC_alf3.csv")
 		write.csv(t(est_fin_ash_DOC), file="C:/LIDEL/Model3/Chain3/results/CVmod_DOC_ash3.csv")
 		write.csv(t(est_fin_blu_DOC), file="C:/LIDEL/Model3/Chain3/results/CVmod_DOC_blu3.csv")
 		write.csv(t(est_fin_oak_DOC), file="C:/LIDEL/Model3/Chain3/results/CVmod_DOC_oak3.csv")
 		write.csv(t(est_fin_pin_DOC), file="C:/LIDEL/Model3/Chain3/results/CVmod_DOC_pin3.csv")
 		
-		#write output for modeled CO2 measurements
+		#save out-of-sample modeled DOC measurements
+		write.csv(t(final_alfalfa_DOC),  file="./results/OOSchain3_DOC_alf.csv")
+		write.csv(t(final_ash_DOC),      file="./results/OOSchain3_DOC_ash.csv")
+		write.csv(t(final_bluestem_DOC), file="./results/OOSchain3_DOC_blu.csv")
+		write.csv(t(final_oak_DOC),      file="./results/OOSchain3_DOC_oak.csv")
+		write.csv(t(final_pine_DOC),     file="./results/OOSchain3_DOC_pin.csv")		
+		
+		#write output for latent state modeled CO2 measurements
 		write.csv(t(est_fin_alf_CO2), file="C:/LIDEL/Model3/Chain3/results/CVmod_CO2_alf3.csv")
 		write.csv(t(est_fin_ash_CO2), file="C:/LIDEL/Model3/Chain3/results/CVmod_CO2_ash3.csv")
 		write.csv(t(est_fin_blu_CO2), file="C:/LIDEL/Model3/Chain3/results/CVmod_CO2_blu3.csv")
 		write.csv(t(est_fin_oak_CO2), file="C:/LIDEL/Model3/Chain3/results/CVmod_CO2_oak3.csv")
 		write.csv(t(est_fin_pin_CO2), file="C:/LIDEL/Model3/Chain3/results/CVmod_CO2_pin3.csv")
     
+		#save out-of-sample modeled CO2 measurements
+		write.csv(t(final_alfalfa_CO2),  file="./results/OOSchain3_CO2_alf.csv")
+		write.csv(t(final_ash_CO2),      file="./results/OOSchain3_CO2_ash.csv")
+		write.csv(t(final_bluestem_CO2), file="./results/OOSchain3_CO2_blu.csv")
+		write.csv(t(final_oak_CO2),      file="./results/OOSchain3_CO2_oak.csv")
+		write.csv(t(final_pine_CO2),     file="./results/OOSchain3_CO2_pin.csv")
+	
+	
     alf1Mass=summary(mod_mass_alf)
     mean_alf1Mass=(alf1Mass[[1]][,1])
     uq_alf1Mass=(alf1Mass[[2]][,5])
@@ -364,6 +399,7 @@ all_rmse[i]=rmse(all_error)
   fin_fin_blu_DOC=mcmc(t(est_fin_blu_DOC))
   fin_fin_oak_DOC=mcmc(t(est_fin_oak_DOC))
   fin_fin_pin_DOC=mcmc(t(est_fin_pin_DOC))
+  
   
       #DOC
       alf1DOC=summary(fin_fin_alf_DOC)
@@ -432,7 +468,8 @@ all_rmse[i]=rmse(all_error)
   fin_fin_oak_CO2=mcmc(t(est_fin_oak_CO2))
   fin_fin_pin_CO2=mcmc(t(est_fin_pin_CO2))
       
-      #DOC
+	  
+      #CO2
       alf1CO2=summary(fin_fin_alf_CO2)
       mean_alf1CO2=(alf1CO2[[1]][,1])
       uq_alf1CO2=(alf1CO2[[2]][,5])
