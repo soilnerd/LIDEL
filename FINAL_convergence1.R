@@ -1,4 +1,5 @@
-setwd("C:/Users/eecampbe/Desktop/trial/model_2_1")
+rm(list=ls())
+setwd("C:/LIDEL")
 library(deSolve)
 library(gplots)
 library(pscl)
@@ -6,28 +7,28 @@ library(rootSolve)
 library(coda)
 library(compiler)
 
-#V2_1 parameter chains
-Param_chain1=read.csv("RESULTchain1_params.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+#Model1 parameter chains
+Param_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/RESULTchain1_params.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_param_chain1=mcmc(Param_chain1[,2:ncol(Param_chain1)])
-Param_chain2=read.csv("RESULTchain2_params.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+Param_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/RESULTchain2_params.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_param_chain2=mcmc(Param_chain2[,2:ncol(Param_chain2)])
-Param_chain3=read.csv("RESULTchain3_params.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+Param_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/RESULTchain3_params.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_param_chain3=mcmc(Param_chain3[,2:ncol(Param_chain3)])
 
-#V2_1 variance chains
-Var_chain1=read.csv("RESULTchain1_var.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+#Model1 variance chains
+Var_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/RESULTchain1_var.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_Var_chain1=mcmc(Var_chain1[,2:ncol(Var_chain1)])
-Var_chain2=read.csv("RESULTchain2_var.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+Var_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/RESULTchain2_var.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_Var_chain2=mcmc(Var_chain2[,2:ncol(Var_chain2)])
-Var_chain3=read.csv("RESULTchain3_var.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+Var_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/RESULTchain3_var.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_Var_chain3=mcmc(Var_chain3[,2:ncol(Var_chain3)])
 
-#V2_1 latent chains
-Latent_chain1=read.csv("RESULTchain1_latent.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+#Model1 latent chains
+Latent_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/RESULTchain1_latent.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_Latent_chain1=mcmc(Latent_chain1[,2:ncol(Latent_chain1)])
-Latent_chain2=read.csv("RESULTchain2_latent.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+Latent_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/RESULTchain2_latent.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_Latent_chain2=mcmc(Latent_chain2[,2:ncol(Latent_chain2)])
-Latent_chain3=read.csv("RESULTchain3_latent.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+Latent_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/RESULTchain3_latent.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
   MC_Latent_chain3=mcmc(Latent_chain3[,2:ncol(Latent_chain3)])
 
 
@@ -38,7 +39,7 @@ combined_param<-mcmc.list(MC_param_chain1, MC_param_chain2, MC_param_chain3)
 combined_var<-mcmc.list(MC_Var_chain1, MC_Var_chain2, MC_Var_chain3)
 combined_latent<-mcmc.list(MC_Latent_chain1, MC_Latent_chain2, MC_Latent_chain3)
 
-sink("C:/Users/eecampbe/Desktop/trial/model_2_1_SUMMARY.txt")
+sink("C:/LIDEL/FINAL_results/Model_1_SUMMARY.txt")
   print(gelman.diag(combined_param))
   print(gelman.diag(combined_var))
   print(gelman.diag(combined_latent))
@@ -50,8 +51,8 @@ sink("C:/Users/eecampbe/Desktop/trial/model_2_1_SUMMARY.txt")
 sink()
 
 #to do
+setwd("C:/LIDEL/Model1/Chain1")
 #load MCMC_data
-
 source("LIDEL_v2_1.R")
 #load function to initialize C pools
 source("LIDEL_initial_function.R")
@@ -73,9 +74,9 @@ source("LIDEL_MCMC_setup_trial.R")
 #create measured/modeled figures using all chain data for model results
 ##################MASS#######################
 #ALFALFA
-AlfMass_chain1=read.csv("CVmod_mass_alf1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AlfMass_chain2=read.csv("CVmod_mass_alf2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AlfMass_chain3=read.csv("CVmod_mass_alf3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfMass_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_mass_alf1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfMass_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_mass_alf2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfMass_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_mass_alf3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 AlfMass_all=mcmc(rbind(AlfMass_chain1[,2:3], AlfMass_chain2[,2:3], AlfMass_chain3[,2:3]))
   alf1Mass=summary(AlfMass_all)
   mean_alf1Mass=(alf1Mass[[1]][,1])
@@ -83,9 +84,9 @@ AlfMass_all=mcmc(rbind(AlfMass_chain1[,2:3], AlfMass_chain2[,2:3], AlfMass_chain
   lq_alf1Mass=(alf1Mass[[2]][,1])
 
 #ASH
-AshMass_chain1=read.csv("CVmod_mass_ash1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AshMass_chain2=read.csv("CVmod_mass_ash2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AshMass_chain3=read.csv("CVmod_mass_ash3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshMass_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_mass_ash1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshMass_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_mass_ash2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshMass_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_mass_ash3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 AshMass_all=mcmc(rbind(AshMass_chain1[,2:3], AshMass_chain2[,2:3], AshMass_chain3[,2:3]))
   ash1Mass=summary(AshMass_all)
   mean_ash1Mass=(ash1Mass[[1]][,1])
@@ -93,9 +94,9 @@ AshMass_all=mcmc(rbind(AshMass_chain1[,2:3], AshMass_chain2[,2:3], AshMass_chain
   lq_ash1Mass=(ash1Mass[[2]][,1])
 
 #BLUESTEM
-BluMass_chain1=read.csv("CVmod_mass_blu1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-BluMass_chain2=read.csv("CVmod_mass_blu2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-BluMass_chain3=read.csv("CVmod_mass_blu3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluMass_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_mass_blu1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluMass_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_mass_blu2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluMass_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_mass_blu3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 BluMass_all=mcmc(rbind(BluMass_chain1[,2:3], BluMass_chain2[,2:3], BluMass_chain3[,2:3]))
   bluestem1Mass=summary(BluMass_all)
   mean_bluestem1Mass=(bluestem1Mass[[1]][,1])
@@ -103,9 +104,9 @@ BluMass_all=mcmc(rbind(BluMass_chain1[,2:3], BluMass_chain2[,2:3], BluMass_chain
   lq_bluestem1Mass=(bluestem1Mass[[2]][,1])
 
 #OAK
-OakMass_chain1=read.csv("CVmod_mass_oak1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-OakMass_chain2=read.csv("CVmod_mass_oak2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-OakMass_chain3=read.csv("CVmod_mass_oak3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakMass_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_mass_oak1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakMass_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_mass_oak2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakMass_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_mass_oak3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 OakMass_all=mcmc(rbind(OakMass_chain1[,2:3], OakMass_chain2[,2:3], OakMass_chain3[,2:3]))
   oak1Mass=summary(OakMass_all)
   mean_oak1Mass=(oak1Mass[[1]][,1])
@@ -113,9 +114,9 @@ OakMass_all=mcmc(rbind(OakMass_chain1[,2:3], OakMass_chain2[,2:3], OakMass_chain
   lq_oak1Mass=(oak1Mass[[2]][,1])
 
 #PINE
-PinMass_chain1=read.csv("CVmod_mass_pin1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-PinMass_chain2=read.csv("CVmod_mass_pin2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-PinMass_chain3=read.csv("CVmod_mass_pin3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinMass_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_mass_pin1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinMass_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_mass_pin2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinMass_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_mass_pin3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 PinMass_all=mcmc(rbind(PinMass_chain1[,2:3], PinMass_chain2[,2:3], PinMass_chain3[,2:3]))
   pine1Mass=summary(PinMass_all)
   mean_pine1Mass=(pine1Mass[[1]][,1])
@@ -153,9 +154,9 @@ abline(0,1)
 
 ####################DOC########################
 #ALFALFA
-AlfDOC_chain1=read.csv("CVmod_DOC_alf1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AlfDOC_chain2=read.csv("CVmod_DOC_alf2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AlfDOC_chain3=read.csv("CVmod_DOC_alf3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_DOC_alf1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_DOC_alf2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_DOC_alf3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 AlfDOC_all=mcmc(rbind(AlfDOC_chain1[,2:ncol(AlfDOC_chain1)], 
                       AlfDOC_chain2[,2:ncol(AlfDOC_chain2)], 
                       AlfDOC_chain3[,2:ncol(AlfDOC_chain3)]))
@@ -165,9 +166,9 @@ AlfDOC_all=mcmc(rbind(AlfDOC_chain1[,2:ncol(AlfDOC_chain1)],
   lq_alf1DOC=(alf1DOC[[2]][,1])
 
 #ASH
-AshDOC_chain1=read.csv("CVmod_DOC_ash1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AshDOC_chain2=read.csv("CVmod_DOC_ash2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AshDOC_chain3=read.csv("CVmod_DOC_ash3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_DOC_ash1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_DOC_ash2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_DOC_ash3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 AshDOC_all=mcmc(rbind(AshDOC_chain1[,2:ncol(AshDOC_chain1)], 
                       AshDOC_chain2[,2:ncol(AshDOC_chain2)], 
                       AshDOC_chain3[,2:ncol(AshDOC_chain3)]))
@@ -177,9 +178,9 @@ AshDOC_all=mcmc(rbind(AshDOC_chain1[,2:ncol(AshDOC_chain1)],
   lq_ash1DOC=(ash1DOC[[2]][,1])
 
 #BLUESTEM
-BluDOC_chain1=read.csv("CVmod_DOC_blu1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-BluDOC_chain2=read.csv("CVmod_DOC_blu2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-BluDOC_chain3=read.csv("CVmod_DOC_blu3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_DOC_blu1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_DOC_blu2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_DOC_blu3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 BluDOC_all=mcmc(rbind(BluDOC_chain1[,2:ncol(BluDOC_chain1)], 
                       BluDOC_chain2[,2:ncol(BluDOC_chain2)], 
                       BluDOC_chain3[,2:ncol(BluDOC_chain3)]))
@@ -189,9 +190,9 @@ BluDOC_all=mcmc(rbind(BluDOC_chain1[,2:ncol(BluDOC_chain1)],
   lq_bluestem1DOC=(bluestem1DOC[[2]][,1])
 
 #OAK
-OakDOC_chain1=read.csv("CVmod_DOC_oak1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-OakDOC_chain2=read.csv("CVmod_DOC_oak2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-OakDOC_chain3=read.csv("CVmod_DOC_oak3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_DOC_oak1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_DOC_oak2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_DOC_oak3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 OakDOC_all=mcmc(rbind(OakDOC_chain1[,2:ncol(OakDOC_chain1)], 
                       OakDOC_chain2[,2:ncol(OakDOC_chain2)], 
                       OakDOC_chain3[,2:ncol(OakDOC_chain3)]))
@@ -201,9 +202,9 @@ OakDOC_all=mcmc(rbind(OakDOC_chain1[,2:ncol(OakDOC_chain1)],
   lq_oak1DOC=(oak1DOC[[2]][,1])
 
 #PINE
-PinDOC_chain1=read.csv("CVmod_DOC_pin1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-PinDOC_chain2=read.csv("CVmod_DOC_pin2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-PinDOC_chain3=read.csv("CVmod_DOC_pin3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_DOC_pin1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_DOC_pin2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_DOC_pin3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 PinDOC_all=mcmc(rbind(PinDOC_chain1[,2:ncol(PinDOC_chain1)], 
                       PinDOC_chain2[,2:ncol(PinDOC_chain2)], 
                       PinDOC_chain3[,2:ncol(PinDOC_chain3)]))
@@ -242,11 +243,11 @@ for(i in 1:num_litter){
 abline(0,1)
 
 
-####################DOC########################
+####################CO2########################
 #ALFALFA
-AlfCO2_chain1=read.csv("CVmod_CO2_alf1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AlfCO2_chain2=read.csv("CVmod_CO2_alf2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AlfCO2_chain3=read.csv("CVmod_CO2_alf3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfCO2_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_CO2_alf1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfCO2_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_CO2_alf2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AlfCO2_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_CO2_alf3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 AlfCO2_all=mcmc(rbind(AlfCO2_chain1[,2:ncol(AlfCO2_chain1)], 
                       AlfCO2_chain2[,2:ncol(AlfCO2_chain2)], 
                       AlfCO2_chain3[,2:ncol(AlfCO2_chain3)]))
@@ -256,9 +257,9 @@ AlfCO2_all=mcmc(rbind(AlfCO2_chain1[,2:ncol(AlfCO2_chain1)],
   lq_alf1CO2=(alf1CO2[[2]][,1])
 
 #ASH
-AshCO2_chain1=read.csv("CVmod_CO2_ash1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AshCO2_chain2=read.csv("CVmod_CO2_ash2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-AshCO2_chain3=read.csv("CVmod_CO2_ash3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshCO2_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_CO2_ash1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshCO2_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_CO2_ash2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+AshCO2_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_CO2_ash3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 AshCO2_all=mcmc(rbind(AshCO2_chain1[,2:ncol(AshCO2_chain1)], 
                       AshCO2_chain2[,2:ncol(AshCO2_chain2)], 
                       AshCO2_chain3[,2:ncol(AshCO2_chain3)]))
@@ -268,9 +269,9 @@ AshCO2_all=mcmc(rbind(AshCO2_chain1[,2:ncol(AshCO2_chain1)],
   lq_ash1CO2=(ash1CO2[[2]][,1])
 
 #BLUESTEM
-BluCO2_chain1=read.csv("CVmod_CO2_blu1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-BluCO2_chain2=read.csv("CVmod_CO2_blu2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-BluCO2_chain3=read.csv("CVmod_CO2_blu3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluCO2_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_CO2_blu1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluCO2_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_CO2_blu2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+BluCO2_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_CO2_blu3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 BluCO2_all=mcmc(rbind(BluCO2_chain1[,2:ncol(BluCO2_chain1)], 
                       BluCO2_chain2[,2:ncol(BluCO2_chain2)], 
                       BluCO2_chain3[,2:ncol(BluCO2_chain3)]))
@@ -280,9 +281,9 @@ BluCO2_all=mcmc(rbind(BluCO2_chain1[,2:ncol(BluCO2_chain1)],
   lq_bluestem1CO2=(bluestem1CO2[[2]][,1])
 
 #OAK
-OakCO2_chain1=read.csv("CVmod_CO2_oak1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-OakCO2_chain2=read.csv("CVmod_CO2_oak2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-OakCO2_chain3=read.csv("CVmod_CO2_oak3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakCO2_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_CO2_oak1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakCO2_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_CO2_oak2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OakCO2_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_CO2_oak3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 OakCO2_all=mcmc(rbind(OakCO2_chain1[,2:ncol(OakCO2_chain1)], 
                       OakCO2_chain2[,2:ncol(OakCO2_chain2)], 
                       OakCO2_chain3[,2:ncol(OakCO2_chain3)]))
@@ -292,9 +293,9 @@ OakCO2_all=mcmc(rbind(OakCO2_chain1[,2:ncol(OakCO2_chain1)],
   lq_oak1CO2=(oak1CO2[[2]][,1])
 
 #PINE
-PinCO2_chain1=read.csv("CVmod_CO2_pin1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-PinCO2_chain2=read.csv("CVmod_CO2_pin2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
-PinCO2_chain3=read.csv("CVmod_CO2_pin3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinCO2_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/CVmod_CO2_pin1.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinCO2_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/CVmod_CO2_pin2.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+PinCO2_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/CVmod_CO2_pin3.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 PinCO2_all=mcmc(rbind(PinCO2_chain1[,2:ncol(PinCO2_chain1)], 
                       PinCO2_chain2[,2:ncol(PinCO2_chain2)], 
                       PinCO2_chain3[,2:ncol(PinCO2_chain3)]))
@@ -335,7 +336,7 @@ abline(0,1)
 
 ###################print results figures#####################
 #MASS
-jpeg(file="C:/Users/eecampbe/Desktop/trial/Mass_2_1.jpg")
+jpeg(file="C:/LIDEL/FINAL_results/Model_1_Mass.jpg")
 par(mar=c(2.85, 2.85, 2.85, 2.85))
 plotCI(list_dataMass, new_mass, err="y", ui=new_mass_uq, li=new_mass_lq, 
        main=expression('Mass'), typ="p", pch=16, bty="n",cex.main=2.5,
@@ -352,7 +353,7 @@ dev.off()
 
 #DOC
 #plot DOC loss
-jpeg(file="C:/Users/eecampbe/Desktop/trial/DOC_2_1.jpg")
+jpeg(file="C:/LIDEL/FINAL_results/Model_1_DOC.jpg")
 par(mar=c(2.85, 2.85, 2.85, 2.85))
 plotCI(list_dataDOC, new_DOC, err="y", ui=new_DOC_uq, li=new_DOC_lq, 
        main=expression('DOC'), typ="p", pch=16, bty="n", cex.main=2.5,
@@ -369,7 +370,7 @@ dev.off()
 
 #CO2
 #plot CO2 loss
-jpeg(file="C:/Users/eecampbe/Desktop/trial/CO2_2_1.jpg")
+jpeg(file="C:/LIDEL/FINAL_results/Model_1_CO2.jpg")
 par(mar=c(2.85, 2.85, 2.85, 2.85))
 plotCI(list_dataCO2, new_CO2, err="y", ui=new_CO2_uq, li=new_CO2_lq, 
        main=expression('CO'[2]), typ="p", bty="n",cex.main=2.5,
@@ -378,6 +379,113 @@ plotCI(list_dataCO2, new_CO2, err="y", ui=new_CO2_uq, li=new_CO2_lq,
 for(i in 1:num_litter){
   for(s in 3:ncol(all_data[[i]][[1]])){
     points(data_MCMC[[i]][[3]][,s], summary_litterCO2[[i]], col="black", 
+           typ="p", pch=4)
+  }
+}
+abline(0,1)
+dev.off()
+
+####################DOC_OOS########################
+#ALFALFA
+OOSAlfDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/OOSchain1_DOC_alf.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSAlfDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/OOSchain2_DOC_alf.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSAlfDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/OOSchain3_DOC_alf.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSAlfDOC_all=mcmc(rbind(OOSAlfDOC_chain1[,2:ncol(OOSAlfDOC_chain1)], 
+                         OOSAlfDOC_chain2[,2:ncol(OOSAlfDOC_chain2)], 
+                         OOSAlfDOC_chain3[,2:ncol(OOSAlfDOC_chain3)]))
+OOSalf1DOC=summary(OOSAlfDOC_all)
+OOSmean_alf1DOC=(OOSalf1DOC[[1]][,1])
+OOSuq_alf1DOC=(OOSalf1DOC[[2]][,5])
+OOSlq_alf1DOC=(OOSalf1DOC[[2]][,1])
+
+#ASH
+OOSAshDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/OOSchain1_DOC_ash.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSAshDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/OOSchain2_DOC_ash.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSAshDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/OOSchain3_DOC_ash.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSAshDOC_all=mcmc(rbind(OOSAshDOC_chain1[,2:ncol(OOSAshDOC_chain1)], 
+                         OOSAshDOC_chain2[,2:ncol(OOSAshDOC_chain2)], 
+                      OOSAshDOC_chain3[,2:ncol(OOSAshDOC_chain3)]))
+OOSash1DOC=summary(OOSAshDOC_all)
+OOSmean_ash1DOC=(OOSash1DOC[[1]][,1])
+OOSuq_ash1DOC=(OOSash1DOC[[2]][,5])
+OOSlq_ash1DOC=(OOSash1DOC[[2]][,1])
+
+#BLUESTEM
+OOSBluDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/OOSchain1_DOC_blu.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSBluDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/OOSchain2_DOC_blu.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSBluDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/OOSchain3_DOC_blu.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSBluDOC_all=mcmc(rbind(OOSBluDOC_chain1[,2:ncol(OOSBluDOC_chain1)], 
+                         OOSBluDOC_chain2[,2:ncol(OOSBluDOC_chain2)], 
+                      OOSBluDOC_chain3[,2:ncol(OOSBluDOC_chain3)]))
+OOSbluestem1DOC=summary(OOSBluDOC_all)
+OOSmean_bluestem1DOC=(OOSbluestem1DOC[[1]][,1])
+OOSuq_bluestem1DOC=(OOSbluestem1DOC[[2]][,5])
+OOSlq_bluestem1DOC=(OOSbluestem1DOC[[2]][,1])
+
+#OAK
+OOSOakDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/OOSchain1_DOC_oak.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSOakDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/OOSchain2_DOC_oak.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSOakDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/OOSchain3_DOC_oak.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSOakDOC_all=mcmc(rbind(OOSOakDOC_chain1[,2:ncol(OOSOakDOC_chain1)], 
+                         OOSOakDOC_chain2[,2:ncol(OOSOakDOC_chain2)], 
+                      OOSOakDOC_chain3[,2:ncol(OOSOakDOC_chain3)]))
+OOSoak1DOC=summary(OOSOakDOC_all)
+OOSmean_oak1DOC=(OOSoak1DOC[[1]][,1])
+OOSuq_oak1DOC=(OOSoak1DOC[[2]][,5])
+OOSlq_oak1DOC=(OOSoak1DOC[[2]][,1])
+
+#PINE
+OOSPinDOC_chain1=read.csv("C:/LIDEL/Model1/Chain1/results/OOSchain1_DOC_pin.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSPinDOC_chain2=read.csv("C:/LIDEL/Model1/Chain2/results/OOSchain2_DOC_pin.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSPinDOC_chain3=read.csv("C:/LIDEL/Model1/Chain3/results/OOSchain3_DOC_pin.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+OOSPinDOC_all=mcmc(rbind(OOSPinDOC_chain1[,2:ncol(OOSPinDOC_chain1)], 
+                         OOSPinDOC_chain2[,2:ncol(OOSPinDOC_chain2)], 
+                      OOSPinDOC_chain3[,2:ncol(OOSPinDOC_chain3)]))
+OOSpine1DOC=summary(OOSPinDOC_all)
+OOSmean_pine1DOC=(OOSpine1DOC[[1]][,1])
+OOSuq_pine1DOC=(OOSpine1DOC[[2]][,5])
+OOSlq_pine1DOC=(OOSpine1DOC[[2]][,1])
+
+
+#for plotting
+OOSsummary_litterDOC=list(OOSmean_alf1DOC, OOSmean_ash1DOC, OOSmean_bluestem1DOC, OOSmean_oak1DOC, OOSmean_pine1DOC)
+
+OOSnew_DOC=c(OOSmean_alf1DOC, OOSmean_ash1DOC, OOSmean_bluestem1DOC, OOSmean_oak1DOC, OOSmean_pine1DOC)  
+OOSnew_DOC_uq=c(OOSuq_alf1DOC, OOSuq_ash1DOC, OOSuq_bluestem1DOC, OOSuq_oak1DOC, OOSuq_pine1DOC) +750
+OOSnew_DOC_lq=c(OOSlq_alf1DOC, OOSlq_ash1DOC, OOSlq_bluestem1DOC, OOSlq_oak1DOC, OOSlq_pine1DOC) -750
+
+OOSlist_dataDOC=c(rowMeans(data_nonMCMC[[1]][[1]][,3:5]),
+               rowMeans(data_nonMCMC[[2]][[1]][,3:5]),
+               rowMeans(data_nonMCMC[[3]][[1]][,3:5]),
+               rowMeans(data_nonMCMC[[4]][[1]][,3:5]),
+               rowMeans(data_nonMCMC[[5]][[1]][,3:5]))  
+
+
+#plot DOC loss
+par(mar=c(4,4,4,4))
+plotCI(OOSlist_dataDOC, OOSnew_DOC, err="y", ui=OOSnew_DOC_uq, li=OOSnew_DOC_lq, 
+       main="DOC OOS Model1", ylab="Modeled DOC", typ="p", pch=16, 
+       xlab="Measured DOC", xlim=c(0, 25000), ylim=c(0, 25000), bty="n")
+#plot of litter C remaining through time
+for(i in 1:num_litter){
+  for(s in 3:ncol(all_data[[i]][[1]])){
+    points(data_nonMCMC[[i]][[1]][,s], OOSsummary_litterDOC[[i]], col="black", 
+           typ="p", pch=4)
+  }
+}
+abline(0,1)
+
+#DOC
+#plot DOC OOS loss
+jpeg(file="C:/LIDEL/FINAL_results/Model_1_DOC_OOS.jpg")
+par(mar=c(2.85, 2.85, 2.85, 2.85))
+plotCI(OOSlist_dataDOC, OOSnew_DOC, err="y", ui=OOSnew_DOC_uq, li=OOSnew_DOC_lq, 
+       main=expression('DOC'), typ="p", pch=16, bty="n", cex.main=2.5,
+       cex.axis=1.85,xlim=c(0, 25000), ylim=c(0, 25000), bty="n")
+#plot of litter C remaining through time
+for(i in 1:num_litter){
+  for(s in 3:ncol(all_data[[i]][[1]])){
+    points(data_nonMCMC[[i]][[1]][,s], OOSsummary_litterDOC[[i]], col="black", 
            typ="p", pch=4)
   }
 }
