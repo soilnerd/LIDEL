@@ -1,5 +1,6 @@
 #############Saved Workspace########################
 #code to run post-processing independently, loading saved workspace
+    rm(list=ls())
     setwd("C:/LIDEL/Model3/Chain3")
     library(deSolve)
     library(gplots)
@@ -368,15 +369,15 @@ for(i in 1:length(all_rmse)){
                             apply(t(x_Cinit[[8]][[5]][366,2:6,]), 1, sum)))
 							
   #print .csv files of modeled results to compare to measured estimates						
-    CVmod_mass_alf1=cbind(apply(t(x_Cinit[[8]][[1]][96,2:6,]), 1, sum),
+    CVmod_mass_alf3=cbind(apply(t(x_Cinit[[8]][[1]][96,2:6,]), 1, sum),
                           apply(t(x_Cinit[[8]][[1]][366,2:6,]), 1, sum))
-    CVmod_mass_ash1=cbind(apply(t(x_Cinit[[8]][[2]][96,2:6,]), 1, sum),
+    CVmod_mass_ash3=cbind(apply(t(x_Cinit[[8]][[2]][96,2:6,]), 1, sum),
                           apply(t(x_Cinit[[8]][[2]][366,2:6,]), 1, sum))
-    CVmod_mass_blu1=cbind(apply(t(x_Cinit[[8]][[3]][96,2:6,]), 1, sum),
+    CVmod_mass_blu3=cbind(apply(t(x_Cinit[[8]][[3]][96,2:6,]), 1, sum),
                           apply(t(x_Cinit[[8]][[3]][366,2:6,]), 1, sum))
-    CVmod_mass_oak1=cbind(apply(t(x_Cinit[[8]][[4]][96,2:6,]), 1, sum),
+    CVmod_mass_oak3=cbind(apply(t(x_Cinit[[8]][[4]][96,2:6,]), 1, sum),
                           apply(t(x_Cinit[[8]][[4]][366,2:6,]), 1, sum))
-    CVmod_mass_pin1=cbind(apply(t(x_Cinit[[8]][[5]][96,2:6,]), 1, sum),
+    CVmod_mass_pin3=cbind(apply(t(x_Cinit[[8]][[5]][96,2:6,]), 1, sum),
                           apply(t(x_Cinit[[8]][[5]][366,2:6,]), 1, sum))
 							
   #write output for modeled mass measurements

@@ -1,5 +1,6 @@
 #############Saved Workspace########################
 #code to run post-processing independently, loading saved workspace
+    rm(list=ls())
     setwd("C:/LIDEL/Model3/Chain1")
     library(deSolve)
     library(gplots)
