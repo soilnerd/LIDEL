@@ -46,3 +46,13 @@ library(compiler)
   #chain 3
     source("C:/LIDEL/Model4/Chain3/LIDEL_post_processing3.R")
 
+#run convergence and final analyses/plots for each model, output in FINAL_results folder
+  #Model 1
+    source("C:/LIDEL/FINAL_convergence1.R")
+  #Model 2
+    source("C:/LIDEL/FINAL_convergence2.R")
+  #Model 3
+    source("C:/LIDEL/FINAL_convergence3.R")
+  #Model 4
+    source("C:/LIDEL/FINAL_convergence4.R")
+
