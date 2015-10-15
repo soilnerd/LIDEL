@@ -1,4 +1,4 @@
-setwd("C:/Users/eecampbe/Desktop/trial")
+setwd("C:/LIDEL/Initial_Conditions_Analysis")
 library(deSolve)
 library(gplots)
 library(pscl)
@@ -6,7 +6,7 @@ library(rootSolve)
 library(coda)
 library(compiler)
 
-load("C:/Users/eecampbe/Desktop/CInit_converged.RData")
+load("C:/LIDEL/Initial_Conditions_Analysis/results/CInit_converged.RData")
 
 C1_params=mcmc(x_CInit[[1]][[1]][burnin:n.iter,])
 C2_params=mcmc(x_CInit[[2]][[1]][burnin:n.iter,])
@@ -16,8 +16,8 @@ C1_sigs=mcmc(x_CInit[[1]][[2]][burnin:n.iter,])
 C2_sigs=mcmc(x_CInit[[2]][[2]][burnin:n.iter,])
 C3_sigs=mcmc(x_CInit[[3]][[2]][burnin:n.iter,])
 
-plot(C1_params)
-plot(C1_sigs)
+#plot(C1_params)
+#plot(C1_sigs)
 
 geweke.diag(C1_params)
 geweke.diag(C2_params)
@@ -39,9 +39,11 @@ print(gelman.diag(combined_sigs))
 
 print(summary(combined))
 print(summary(combined_sigs))
+print(summary(combined_var))
 
 #creat summary of combined chains
 all_sum=summary(combined)
+var_sum=summary(combined_var)
 
 par(mfrow=c(2,1))
 densplot(combined_sigs[,18:19], xlim=c(0.05, 0.35), ylim=c(0,30), show.obs=FALSE, main="")
@@ -81,3 +83,16 @@ axis(1,1:5,label=litter_nam)
 legend("topright", legend=c("Estimated", "Meas-HWE", "Meas-Mass Diff"), 
        pch=c(20,4, 6), pt.cex=c(3,2,2), pt.lwd=2, cex=1.5)
 
+#################plot variance
+#pull mean and credible intervals from summary results from all chains
+Mean_var_all=var_sum[[1]][18:19,1]
+uq_var_all=var_sum[[2]][18:19,5]
+lq_var_all=var_sum[[2]][18:19,1]
+
+#Plot measurement variance estimates for soluble fraction
+par(mfrow=c(1,1))
+plotCI(Mean_var_all, ui=uq_var_all, li=lq_var_all, 
+       ylab="Variance of Soluble Fraction Measurements", cex.lab=1.5, lwd=4,
+       ylim=c(0,0.1), xaxt="n", xlim=c(.8,2.2), cex=3, xlab="Measurement Type", bty="n")
+
+axis(1,1:2,label=c("Hot Water Extraction", "Mass Difference"))
