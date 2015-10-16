@@ -219,8 +219,8 @@ library(compiler)
   #create lists of results to use for plotting
     summary_litterDOC=list(mean_alf1DOC, mean_ash1DOC, mean_bluestem1DOC, mean_oak1DOC, mean_pine1DOC)
     new_DOC=c(mean_alf1DOC, mean_ash1DOC, mean_bluestem1DOC, mean_oak1DOC, mean_pine1DOC)  
-    new_DOC_uq=c(uq_alf1DOC, uq_ash1DOC, uq_bluestem1DOC, uq_oak1DOC, uq_pine1DOC) +750
-    new_DOC_lq=c(lq_alf1DOC, lq_ash1DOC, lq_bluestem1DOC, lq_oak1DOC, lq_pine1DOC) -750
+    new_DOC_uq=c(uq_alf1DOC, uq_ash1DOC, uq_bluestem1DOC, uq_oak1DOC, uq_pine1DOC)
+    new_DOC_lq=c(lq_alf1DOC, lq_ash1DOC, lq_bluestem1DOC, lq_oak1DOC, lq_pine1DOC)
     list_dataDOC=c(rowMeans(data_MCMC[[1]][[2]][,3:5]),
                    rowMeans(data_MCMC[[2]][[2]][,3:5]),
                    rowMeans(data_MCMC[[3]][[2]][,3:5]),
@@ -447,7 +447,7 @@ library(compiler)
              xlab=expression(paste("Measured DOC (mg C ", Delta, t^-1, ")")),
              ylab=expression(paste("Modeled DOC (mg C ", Delta, t^-1, ")")),
              typ="p", pch=16, bty="n", cex.lab=1.65,
-             cex.axis=1.65,xlim=c(0, 15), ylim=c(0, 15), bty="n", gap=0)
+             cex.axis=1.65,xlim=c(0, 16), ylim=c(0, 16), bty="n", gap=0)
       abline(0,1)
     #plot all measured data
 #       for(i in 1:num_litter){
@@ -542,7 +542,7 @@ library(compiler)
              typ="p", bty="n",cex.lab=1.65, gap=0,
              xlab=expression(paste("Measured CO"[2]," (mg C ", Delta, t^-1, ")")),
              ylab=expression(paste("Modeled CO"[2]," (mg C ", Delta, t^-1, ")")),
-             cex.axis=1.65,pch=16, xlim=c(0, 100), ylim=c(0, 100))
+             cex.axis=1.65,pch=16, xlim=c(0, 120), ylim=c(0, 120))
     #plot all measured data
 #       for(i in 1:num_litter){
 #         for(s in 3:ncol(all_data[[i]][[1]])){

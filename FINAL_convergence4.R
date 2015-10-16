@@ -219,8 +219,8 @@ library(compiler)
   #create lists of results to use for plotting
     summary_litterDOC=list(mean_alf1DOC, mean_ash1DOC, mean_bluestem1DOC, mean_oak1DOC, mean_pine1DOC)
     new_DOC=c(mean_alf1DOC, mean_ash1DOC, mean_bluestem1DOC, mean_oak1DOC, mean_pine1DOC)  
-    new_DOC_uq=c(uq_alf1DOC, uq_ash1DOC, uq_bluestem1DOC, uq_oak1DOC, uq_pine1DOC) +750
-    new_DOC_lq=c(lq_alf1DOC, lq_ash1DOC, lq_bluestem1DOC, lq_oak1DOC, lq_pine1DOC) -750
+    new_DOC_uq=c(uq_alf1DOC, uq_ash1DOC, uq_bluestem1DOC, uq_oak1DOC, uq_pine1DOC)
+    new_DOC_lq=c(lq_alf1DOC, lq_ash1DOC, lq_bluestem1DOC, lq_oak1DOC, lq_pine1DOC)
     list_dataDOC=c(rowMeans(data_MCMC[[1]][[2]][,3:5]),
                    rowMeans(data_MCMC[[2]][[2]][,3:5]),
                    rowMeans(data_MCMC[[3]][[2]][,3:5]),
@@ -304,52 +304,62 @@ library(compiler)
 ###################print Latent State Result Figures#####################
   #MASS
       jpeg(file="C:/LIDEL/FINAL_results/Model4_Mass.jpg")
-      par(mar=c(2.85, 2.85, 2.85, 2.85))
+      par(mar=c(5, 5, 3, 3))
     #plot measured mean/modeled results
-      plotCI(list_dataMass, new_mass, err="y", ui=new_mass_uq, li=new_mass_lq, 
-             main=expression('Mass'), typ="p", pch=16, bty="n",cex.main=2.5,
-             cex.axis=1.85,xlim=c(100000, 1000000), ylim=c(100000, 1000000))
+      plotCI(list_dataMass/1000, new_mass/1000, err="y", 
+             ui=new_mass_uq/1000, li=new_mass_lq/1000, 
+             typ="p", pch=16, cex.lab=1.65,
+             xlab=expression(paste("Measured Mass Loss (mg C ", Delta, t^-1, ")")),
+             ylab=expression(paste("Modeled Mass Loss (mg C ", Delta, t^-1, ")")),
+             bty="n",cex.main=2.5,
+             cex.axis=1.65,xlim=c(0, 1000), ylim=c(0, 1000))
     #plot all measured data
-      for(i in 1:num_litter){
-        for(s in 3:ncol(all_data[[i]][[1]])){
-          points(data_MCMC[[i]][[1]][,s], summary_litterMass[[i]], col="black", 
-                 typ="p", pch=4)
-        }
-      }
+#       for(i in 1:num_litter){
+#         for(s in 3:ncol(all_data[[i]][[1]])){
+#           points(data_MCMC[[i]][[1]][,s], summary_litterMass[[i]], col="black", 
+#                  typ="p", pch=4)
+#         }
+#       }
       abline(0,1)
       dev.off()
 
   #DOC
       jpeg(file="C:/LIDEL/FINAL_results/Model4_DOC.jpg")
-      par(mar=c(2.85, 2.85, 2.85, 2.85))
+      par(mar=c(5, 5, 3, 3))
     #plot measured mean/modeled results
-      plotCI(list_dataDOC, new_DOC, err="y", ui=new_DOC_uq, li=new_DOC_lq, 
-             main=expression('DOC'), typ="p", pch=16, bty="n", cex.main=2.5,
-             cex.axis=1.85,xlim=c(0, 25000), ylim=c(0, 25000), bty="n")
+      plotCI(list_dataDOC/1000, new_DOC/1000, err="y", 
+             ui=new_DOC_uq/1000, li=new_DOC_lq/1000, 
+             typ="p", pch=16, bty="n", cex.lab=1.65, gap=0,
+             xlab=expression(paste("Measured DOC (mg C ", Delta, t^-1, ")")),
+             ylab=expression(paste("Modeled DOC (mg C ", Delta, t^-1, ")")),
+             cex.axis=1.65,xlim=c(0, 25), ylim=c(0, 25), bty="n")
     #plot all measured data
-      for(i in 1:num_litter){
-        for(s in 3:ncol(all_data[[i]][[1]])){
-          points(data_MCMC[[i]][[2]][,s], summary_litterDOC[[i]], col="black", 
-                 typ="p", pch=4)
-        }
-      }
+#       for(i in 1:num_litter){
+#         for(s in 3:ncol(all_data[[i]][[1]])){
+#           points(data_MCMC[[i]][[2]][,s], summary_litterDOC[[i]], col="black", 
+#                  typ="p", pch=4)
+#         }
+#       }
       abline(0,1)
       dev.off()
 
   #CO2
       jpeg(file="C:/LIDEL/FINAL_results/Model4_CO2.jpg")
-      par(mar=c(2.85, 2.85, 2.85, 2.85))
+      par(mar=c(5, 5, 3, 3))
     #plot measured mean/modeled results
-      plotCI(list_dataCO2, new_CO2, err="y", ui=new_CO2_uq, li=new_CO2_lq, 
-             main=expression('CO'[2]), typ="p", bty="n",cex.main=2.5,
-             cex.axis=1.85,pch=16, xlim=c(0, 65000), ylim=c(0, 65000))
+      plotCI(list_dataCO2/1000, new_CO2/1000, err="y", 
+             ui=new_CO2_uq/1000, li=new_CO2_lq/1000, 
+             typ="p", bty="n",cex.lab=1.65, gap=0,
+             xlab=expression(paste("Measured CO"[2]," (mg C ", Delta, t^-1, ")")),
+             ylab=expression(paste("Modeled CO"[2]," (mg C ", Delta, t^-1, ")")),
+             cex.axis=1.65,pch=16, xlim=c(0, 70), ylim=c(0, 70))
     #plot all measured data
-      for(i in 1:num_litter){
-        for(s in 3:ncol(all_data[[i]][[1]])){
-          points(data_MCMC[[i]][[3]][,s], summary_litterCO2[[i]], col="black", 
-                 typ="p", pch=4)
-        }
-      }
+#       for(i in 1:num_litter){
+#         for(s in 3:ncol(all_data[[i]][[1]])){
+#           points(data_MCMC[[i]][[3]][,s], summary_litterCO2[[i]], col="black", 
+#                  typ="p", pch=4)
+#         }
+#       }
       abline(0,1)
       dev.off()
 
@@ -420,8 +430,8 @@ library(compiler)
   #create lists of results to use for plotting
     OOSsummary_litterDOC=list(OOSmean_alf1DOC, OOSmean_ash1DOC, OOSmean_bluestem1DOC, OOSmean_oak1DOC, OOSmean_pine1DOC)
     OOSnew_DOC=c(OOSmean_alf1DOC, OOSmean_ash1DOC, OOSmean_bluestem1DOC, OOSmean_oak1DOC, OOSmean_pine1DOC)  
-    OOSnew_DOC_uq=c(OOSuq_alf1DOC, OOSuq_ash1DOC, OOSuq_bluestem1DOC, OOSuq_oak1DOC, OOSuq_pine1DOC) +750
-    OOSnew_DOC_lq=c(OOSlq_alf1DOC, OOSlq_ash1DOC, OOSlq_bluestem1DOC, OOSlq_oak1DOC, OOSlq_pine1DOC) -750
+    OOSnew_DOC_uq=c(OOSuq_alf1DOC, OOSuq_ash1DOC, OOSuq_bluestem1DOC, OOSuq_oak1DOC, OOSuq_pine1DOC)
+    OOSnew_DOC_lq=c(OOSlq_alf1DOC, OOSlq_ash1DOC, OOSlq_bluestem1DOC, OOSlq_oak1DOC, OOSlq_pine1DOC)
     OOSlist_dataDOC=c(rowMeans(data_nonMCMC[[1]][[1]][,3:5]),
                    rowMeans(data_nonMCMC[[2]][[1]][,3:5]),
                    rowMeans(data_nonMCMC[[3]][[1]][,3:5]),
@@ -430,21 +440,24 @@ library(compiler)
 
   #output figure for plot of DOC OOS loss
       jpeg(file="C:/LIDEL/FINAL_results/Model4_DOC_OOS.jpg")
-      par(mar=c(2.85, 2.85, 2.85, 2.85))
+      par(mar=c(5, 5, 3, 3))
     #plot measured mean/modeled results
-      plotCI(OOSlist_dataDOC, OOSnew_DOC, err="y", ui=OOSnew_DOC_uq, li=OOSnew_DOC_lq, 
-             main=expression('DOC'), typ="p", pch=16, bty="n", cex.main=2.5,
-             cex.axis=1.85,xlim=c(0, 25000), ylim=c(0, 25000), bty="n")
-    #plot of litter C remaining through time
-      for(i in 1:num_litter){
-        for(s in 3:ncol(all_data[[i]][[1]])){
-          points(data_nonMCMC[[i]][[1]][,s], OOSsummary_litterDOC[[i]], col="black", 
-                 typ="p", pch=4)
-        }
-      }
+      plotCI(OOSlist_dataDOC/1000, OOSnew_DOC/1000, err="y", 
+             ui=OOSnew_DOC_uq/1000, li=OOSnew_DOC_lq/1000, 
+             xlab=expression(paste("Measured DOC (mg C ", Delta, t^-1, ")")),
+             ylab=expression(paste("Modeled DOC (mg C ", Delta, t^-1, ")")),
+             typ="p", pch=16, bty="n", cex.lab=1.65,
+             cex.axis=1.65,xlim=c(0, 16), ylim=c(0, 16), bty="n", gap=0)
       abline(0,1)
-      dev.off()
-      
+    #plot all measured data
+#       for(i in 1:num_litter){
+#         for(s in 3:ncol(all_data[[i]][[1]])){
+#           points(data_nonMCMC[[i]][[1]][,s], OOSsummary_litterDOC[[i]], col="black", 
+#                  typ="p", pch=4)
+#         }
+#       }
+
+      dev.off()     
       
 ####################CO2 Out-of-Sample Results########################
 #load model outputs for each litter and measurement type, then summarize data
@@ -522,18 +535,21 @@ library(compiler)
     
   #Plot for figure of CO2 OOS results
       jpeg(file="C:/LIDEL/FINAL_results/Model4_CO2_OOS.jpg")
-      par(mar=c(2.85, 2.85, 2.85, 2.85))
+      par(mar=c(5, 5, 3, 3))
     #plot measured mean/modeled results
-      plotCI(OOS_list_dataCO2, OOS_new_CO2, err="y", ui=OOS_new_CO2_uq, li=OOS_new_CO2_lq, 
-             main=expression('CO'[2]), typ="p", bty="n",cex.main=2.5,
-             cex.axis=1.85,pch=16, xlim=c(0, 65000), ylim=c(0, 65000))
+      plotCI(OOS_list_dataCO2/1000, OOS_new_CO2/1000, err="y", 
+             ui=OOS_new_CO2_uq/1000, li=OOS_new_CO2_lq/1000, 
+             typ="p", bty="n",cex.lab=1.65, gap=0,
+             xlab=expression(paste("Measured CO"[2]," (mg C ", Delta, t^-1, ")")),
+             ylab=expression(paste("Modeled CO"[2]," (mg C ", Delta, t^-1, ")")),
+             cex.axis=1.65,pch=16, xlim=c(0, 120), ylim=c(0, 120))
     #plot all measured data
-      for(i in 1:num_litter){
-        for(s in 3:ncol(all_data[[i]][[1]])){
-          points(data_nonMCMC[[i]][[2]][,s], OOS_summary_litterCO2[[i]], col="black", 
-                 typ="p", pch=4)
-        }
-      }
+#       for(i in 1:num_litter){
+#         for(s in 3:ncol(all_data[[i]][[1]])){
+#           points(data_nonMCMC[[i]][[2]][,s], OOS_summary_litterCO2[[i]], col="black", 
+#                  typ="p", pch=4)
+#         }
+#       }
       abline(0,1)
       dev.off()
     
