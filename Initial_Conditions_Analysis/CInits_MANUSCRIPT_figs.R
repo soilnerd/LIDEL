@@ -28,9 +28,7 @@
   C3_sigs=mcmc(x_CInit[[3]][[2]][burnin:n.iter,])
 
 #Output geweke diagnostic results for each chain, parameter and error
-  
   sink("C:/LIDEL/Initial_Conditions_Analysis/results/Initial_conditions_summary_CHAINS.txt")
-  
     print(geweke.diag(C1_params))
     print(geweke.diag(C2_params))
     print(geweke.diag(C3_params))
@@ -38,33 +36,28 @@
     print(geweke.diag(C1_sigs))
     print(geweke.diag(C2_sigs))
     print(geweke.diag(C3_sigs))
-    
   sink()
 
-#create mcmc list (manual for now) with all chains
+#create mcmc list with all chains
   #if thinning is preferred: 
   #thin=seq(from=burnin, to=n.iter, by="thin"), then mcmc(<result>[thin,])
-  
-  combined<-mcmc.list(C1_params, C2_params, C3_params)
-  combined_sigs<-mcmc.list(C1_sigs, C2_sigs, C3_sigs)
-  combined_var=mcmc(rbind(C1_sigs, C2_sigs, C3_sigs)^2)
+	  combined<-mcmc.list(C1_params, C2_params, C3_params)
+	  combined_sigs<-mcmc.list(C1_sigs, C2_sigs, C3_sigs)
+	  combined_var=mcmc(rbind(C1_sigs, C2_sigs, C3_sigs)^2)
 
 #print gelman diagnostics and summary of values
   sink("C:/LIDEL/Initial_Conditions_Analysis/results/Initial_conditions_summary_ALL.txt")
-  
-  print(gelman.diag(combined))
-  print(gelman.diag(combined_sigs))
-  
-  print(summary(combined))
-  print(summary(combined_sigs))
-  print(summary(combined_var))
-  
+	  print(gelman.diag(combined))
+	  print(gelman.diag(combined_sigs))
+	  
+	  print(summary(combined))
+	  print(summary(combined_sigs))
+	  print(summary(combined_var))
   sink()
 
 #creat object with summary of combined chains
   all_sum=summary(combined)
   var_sum=summary(combined_var)
-
 
 ##################PLOTS#######################
 #density plots of variance for HWE and mass difference measurements
@@ -141,7 +134,6 @@
       axis(1,at=c(1,2),label=c("Hot Water Extraction", "Mass Difference"), cex.axis=1.5)
       axis(1,at=c(.8, 2.2), labels=c("",""), lwd.ticks=0)
 
-    
   #Export plot for Figure 5, Fs estimates for all litter, using all measured data
     jpeg(file="C:/LIDEL/Initial_Conditions_Analysis/results/Figure5A.jpg")
     
