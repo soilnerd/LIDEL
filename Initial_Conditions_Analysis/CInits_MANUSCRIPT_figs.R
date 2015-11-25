@@ -94,28 +94,41 @@
              pch=c(20,4, 6), pt.cex=c(2,2,2), pt.lwd=2, cex=1.5)
   
   #Export plot for Figure 5B, Fs estimates for all litter, using all measured data
-    jpeg(file="C:/LIDEL/Initial_Conditions_Analysis/results/Figure5B.jpg")
-    
       par(mfrow=c(1,1))
+      jpeg(file="C:/LIDEL/Initial_Conditions_Analysis/results/Figure5B.jpg", width=900, height=900, res=300)
+      par(mar=c(3.2, 3.3, 1, 1))
       plotCI(Mean_Fs_all, ui=uq_all, li=lq_all, 
-             ylab="Soluble fraction", cex.lab=1.5, cex.axis=1.5, lwd=4,
-             ylim=c(0,1), xaxt="n", cex=3, xlab="Litter type", bty="n")
+             ylab="", xlab="", gap=0,
+             #ylab="Soluble fraction", 
+             #xlab="Litter type", 
+             cex.lab=0.75, cex.axis=.75, 
+             lwd=1.5,
+             ylim=c(0,1), xaxt="n", #cex=3, 
+             bty="n")
     #HWE data
       for(s in 1:ncol(data_real_all$y_Fs[[1]])){
         points(data_real_all$y_Fs[[1]][,s], col="black", 
-               type="p", pch=4, lwd=2, cex=2)
+               type="p", pch=4, #lwd=1.2, #cex=2
+               )
       }
     #Mass-difference data
       for(s in 1:ncol(data_real_all$y_Fs[[2]])){
         points(data_real_all$y_Fs[[2]][,s], col="black", 
-               type="p", pch=6, lwd=2, cex=2)
+               type="p", pch=6, #lwd=2, #cex=2
+               )
       }
     #plot mean of estimated points
       points(Mean_Fs_all, type="p", pch=20, 
-             cex=2)
-      axis(1,1:5,label=litter_nam, cex.axis=1.5)
+             #cex=2
+             )
+      mtext("Litter type", side=1, line=2.1, cex=0.75)
+      mtext("Soluble fraction", side=2, line=2.1, cex=0.75)
+      axis(1,1:5,label=litter_nam, cex.axis=.75)
       legend("topright", legend=c("Estimated", "Meas-HWE", "Meas-Mass Diff"), 
-             pch=c(20,4, 6), pt.cex=c(2,2,2), pt.lwd=2, cex=1.5)
+             pch=c(20,4, 6), #pt.cex=c(2,2,2), 
+             #pt.lwd=2, 
+             cex=.65,
+             )
     dev.off()
     
 #plot variance for figure 5A
@@ -135,15 +148,25 @@
       axis(1,at=c(.8, 2.2), labels=c("",""), lwd.ticks=0)
 
   #Export plot for Figure 5, Fs estimates for all litter, using all measured data
-    jpeg(file="C:/LIDEL/Initial_Conditions_Analysis/results/Figure5A.jpg")
-    
+    jpeg(file="C:/LIDEL/Initial_Conditions_Analysis/results/Figure5A.jpg", width=900, height=900, res=300)
+    par(mar=c(3.2, 3.3, 1, 1))
     #Plot measurement variance estimates for soluble fraction
       par(mfrow=c(1,1))
-      plotCI(Mean_var_all, ui=uq_var_all, li=lq_var_all, cex.axis=1.5,
-             ylab="Variance of Soluble Fraction Measurements", cex.lab=1.5, lwd=4,
-             ylim=c(0,0.1), xaxt="n", xlim=c(.8,2.2), cex=3, xlab="Measurement Type", bty="n")
+      plotCI(Mean_var_all, ui=uq_var_all, li=lq_var_all, 
+             cex.axis=.75,
+             ylab="", xlab="", gap=0,
+             #ylab="Variance of Soluble Fraction Measurements", #cex.lab=1.5, 
+             #xlab="Measurement Type", 
+             lwd=1.5,
+             ylim=c(0,0.1), xaxt="n", xlim=c(.8,2.2), 
+             #cex=3, 
+             bty="n")
       points(Mean_var_all, type="p", pch=20, 
-             cex=2)
-      axis(1,at=c(1,2),label=c("Hot Water Extraction", "Mass Difference"), cex.axis=1.5)
+             #cex=2
+             )
+      axis(1,at=c(1,2),label=c("Hot Water Extraction", "Mass Difference"), cex.axis=0.75)
       axis(1,at=c(.8, 2.2), labels=c("",""), lwd.ticks=0)
+      mtext("Measurement Type", side=1, line=2.1, cex=0.75)
+      mtext("Variance of Soluble Fraction Measurements", side=2, line=2.1, cex=0.75)
+
     dev.off()
